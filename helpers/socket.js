@@ -1,4 +1,4 @@
-const auth =  require('../helpers/firebase.service');
+const axios = require('axios');
 
 let iosocket;
 
@@ -13,21 +13,20 @@ const authentication = async (socket,next) => {
         socket.isAuthenticated = false;
         return;
     }
-
-    const sessionCookie = socket.handshake.headers.cookie.split("=")[1].split(";")[0];
-    await auth
-    .verifySessionCookie(sessionCookie, true)
-    .then((user) => {
-
-       socket.userid = user.uid;
-       socket.email = user.email;
-       socket.isAuthenticated = true;
-       console.log(`${socket.email} is successfully connected to socket with id ${socket.id}`);
-    })
-    .catch((error) => {
+    axios.default.post('http://localhost:8080/authenticate/socket',{},{
+        headers:{
+            'content-type': 'application/json',
+            'cookie' : socket.handshake.headers.cookie
+        }
+        })
+        .then((response)=>{
+            console.log(response.data);
+        })
+       .catch((err)=>{
         console.log("[Auth Error] Firebase Authentication Failed");
         socket.isAuthenticated = false;
-    });
+       })
+
     next();
 }
 

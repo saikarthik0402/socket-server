@@ -5,13 +5,14 @@ const cors = require('cors');
 const helmet = require('helmet');
 const cookieParser = require('cookie-parser');
 const http = require('http');
+const socket  = require('./helpers/socket');
 
 
 const app = express();
 const httpServer = http.createServer(app);
 const io = require("socket.io")(httpServer, {
   cors: {
-    origin: process.env.ORIGIN,
+    origin: 'http://localhost:4200',
     methods: ["GET"],
     credentials: true
   }
@@ -19,25 +20,26 @@ const io = require("socket.io")(httpServer, {
 
 
 app.use(cors({
-  origin: process.env.ORIGIN,
-  credentials:true
+  origin:process.env.ORIGIN
 }));
+
 app.use(helmet());
 app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser())
 
 
-//HTTP Router Controllers
-app.use('/authenticate',firebase.verifyuser);
+app.post('/update/status', (req, res, next) => {
+  console.log(req.body);
 
+  res.sendStatus(200);
+})
 
 //Socket IO Request Handlers
-io.use(authentication);
-io.on("connection",Onconnection);
+io.use(socket.authentication);
+io.on("connection",socket.Onconnection);
 
 
 httpServer.listen(process.env.PORT,()=> {
     console.log('Server listening on port ' + process.env.PORT);
-    console.log(`Server running on ${process.env.NODE_ENV ? process.env.NODE_ENV : "production"} environment`);
 });
