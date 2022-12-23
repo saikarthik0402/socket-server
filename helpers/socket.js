@@ -20,7 +20,12 @@ const authentication = async (socket,next) => {
         }
         })
         .then((response)=>{
-            console.log(response.data);
+            const user = response.data
+
+            socket.userid = user?.rawId;
+            socket.email = user?.email;
+            socket.isAuthenticated = true;
+            console.log(`${socket.email} is successfully connected to socket with id ${socket.id}`);
         })
        .catch((err)=>{
         console.log("[Auth Error] Firebase Authentication Failed");
