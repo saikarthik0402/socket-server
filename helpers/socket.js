@@ -13,7 +13,7 @@ const authentication = async (socket,next) => {
         socket.isAuthenticated = false;
         return;
     }
-    axios.default.post('http://localhost:8080/authenticate/socket',{},{
+    axios.default.post(`${process.env.ORIGIN}/authenticate/socket`,{},{
         headers:{
             'content-type': 'application/json',
             'cookie' : socket.handshake.headers.cookie
