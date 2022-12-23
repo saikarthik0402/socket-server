@@ -42,14 +42,14 @@ const Onconnection = (socket) => {
     OnDisconnect(socket);
 }
 
-function OnSuccess()
+function OnSuccess(email)
 {
     console.log("Payment Updated");
     console.log(iosocket.email);
     let interval = 0;
     var emitinterval = setInterval(()=>{
         interval+=1000;
-        iosocket.emit(iosocket.email,{id:iosocket.id,time:new Date().toString(),successcode:200,message:"Payment Successfull"});
+        iosocket.emit(email,{id:iosocket.id,time:new Date().toString(),successcode:200,message:"Payment Successfull"});
         if(interval > process.env.SOCKET_TIMEOUT) {
             clearInterval(emitinterval);
         }

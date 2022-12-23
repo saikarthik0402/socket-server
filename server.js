@@ -12,7 +12,7 @@ const app = express();
 const httpServer = http.createServer(app);
 const io = require("socket.io")(httpServer, {
   cors: {
-    origin: 'http://localhost:4200',
+    origin: process.env.SOCKET_CLIENT,
     methods: ["GET"],
     credentials: true
   }
@@ -31,8 +31,9 @@ app.use(cookieParser())
 
 app.post('/update/status', (req, res, next) => {
   console.log(req.body);
-
   res.sendStatus(200);
+  socket.OnSuccess(req.body.email);
+
 })
 
 //Socket IO Request Handlers
